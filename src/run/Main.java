@@ -33,25 +33,31 @@ public class Main {
 	private static final String[] DOWNLOAD_MANAGER_TYPE=new String[]{
 		"Earth"
 	};
+	public void setFrameVisable(boolean enable){
+		frmDownload.setVisible(enable);
+	}
+	public JFrame getFrmDownload() {
+		return frmDownload;
+	}
 	private JTextField txtFolder;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			Main window=null;
-			public void run() {
-				try {
-					window= new Main();
-					window.frmDownload.setVisible(true);
-				} catch (Exception e) {
-					if(window !=null)
-					Message.showMessage(window.frmDownload, "Đã có lỗi xảy ra: "+e.getMessage());
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			Main window=null;
+//			public void run() {
+//				try {
+//					window= new Main();
+//					window.frmDownload.setVisible(true);
+//				} catch (Exception e) {
+//					if(window !=null)
+//					Message.showMessage(window.frmDownload, "Đã có lỗi xảy ra: "+e.getMessage());
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.

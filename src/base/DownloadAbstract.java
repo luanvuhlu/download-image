@@ -3,6 +3,8 @@ package base;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,7 +16,7 @@ import common.Message;
 import entity.Image;
 import entity.PathEntity;
 
-public abstract class DownloadAbstract {
+public abstract class DownloadAbstract  {
 	protected DownloadAbstract(MainSetting setting) {
 		this.setting=setting;
 	}
@@ -86,7 +88,7 @@ public abstract class DownloadAbstract {
 			}
 		}
 		try{
-			int p1=Integer.parseInt(setting.getPage());
+			int p1=Integer.parseInt(setting.getPage().substring(0, setting.getPage().lastIndexOf("-")));
 			int p2=Integer.parseInt(setting.getPage().substring(setting.getPage().lastIndexOf("-")+1));
 			return new int[]{p1, p2};
 		}catch(Exception e){
@@ -96,7 +98,7 @@ public abstract class DownloadAbstract {
 	public void run() throws Exception {
 		
 		try{
-			Message.printConsole("Đang download từ path: "+setting.getPath());
+			Message.printConsole("Đang download từ path: "+setting.getPath()+" pages: "+setting.getPage());
 			if(setting.isDirect()){
 				PathEntity pEtt=getPathDetail(setting.getPath());
 				downloadDirectPage(pEtt);
@@ -108,25 +110,27 @@ public abstract class DownloadAbstract {
 				Message.printConsole("Giới hạn về phân trang không đúng");
 				return;
 			}
+			if(pages[1] > 0 && pages[0] <= pages[1] || pages[1] == 0){
+				index=pages[0]-1;
+			}
 			do{
-				
-					if("0".equals(setting.getPage())){
-						paths=getPaths(setting.getPath());
-					}
-					if(pages[1] <= 0 || index < pages[1]){
-						index++;
-					}
-					if(paths!=null){
-						for(PathEntity pEtt:paths){
-							try{
-								downloadDirectPage(pEtt);
-							}catch(Exception e){
-								Message.printConsole("Có lỗi :"+e.getMessage());
-								continue;
-							}
+				if("0".equals(setting.getPage())){
+					paths=getPaths(setting.getPath());
+				}
+				if(pages[1] <= 0 || index < pages[1]){
+					index++;
+				}
+				if(paths!=null){
+					for(PathEntity pEtt:paths){
+						try{
+							downloadDirectPage(pEtt);
+						}catch(Exception e){
+							Message.printConsole("Có lỗi :"+e.getMessage());
+							continue;
 						}
 					}
-					paths=getPaths(nextPage(setting.getPath()));
+				}
+				paths=getPaths(nextPage(setting.getPath()));
 				
 			}while(paths !=null && paths.size() > 0);
 			Message.printConsole("***********DONE********");

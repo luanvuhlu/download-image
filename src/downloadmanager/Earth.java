@@ -49,6 +49,7 @@ public class Earth extends DownloadAbstract {
 	}
 	@Override
 	public List<PathEntity> getPaths(String rootPath) throws Exception {
+		Message.printConsole("Đang lấy thông tin từ: "+rootPath);
 		if(rootPath==null || "".equals(rootPath)){
 			return null;
 		}
@@ -75,7 +76,7 @@ public class Earth extends DownloadAbstract {
 		return paths;
 	}
 	protected String nextPage(String rootPath){
-		return rootPath+"?p="+index;
+		return rootPath+"&page="+index;
 	}
 
 }
